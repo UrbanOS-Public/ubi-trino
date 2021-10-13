@@ -577,7 +577,7 @@ parameters:
   displayName: CPU Request
   name: COORDINATOR_CPU_REQUEST
   required: true
-  value: 200m
+  value: 250m
 - description: Maximum amount of cpu the Django container can use.
   displayName: CPU Limit
   name: COORDINATOR_CPU_LIMIT
@@ -589,7 +589,7 @@ parameters:
   displayName: Worker replica count
   name: WORKER_REPLICAS
   required: true
-  value: '3'
+  value: '1'
 - description: Initial amount of memory the Django container will request.
   displayName: Memory Request
   name: WORKER_MEMORY_REQUEST
@@ -604,12 +604,12 @@ parameters:
   displayName: CPU Request
   name: WORKER_CPU_REQUEST
   required: true
-  value: 500m
+  value: 250m
 - description: Maximum amount of cpu the Django container can use.
   displayName: CPU Limit
   name: WORKER_CPU_LIMIT
   required: true
-  value: '1'
+  value: 500m
 
 # JVM Params
 - description: JVM InitialRAMPercentage option
