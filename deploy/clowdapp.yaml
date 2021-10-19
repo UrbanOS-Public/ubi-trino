@@ -589,7 +589,7 @@ parameters:
   displayName: Worker replica count
   name: WORKER_REPLICAS
   required: true
-  value: '1'
+  value: '2'
 - description: Initial amount of memory the Django container will request.
   displayName: Memory Request
   name: WORKER_MEMORY_REQUEST
