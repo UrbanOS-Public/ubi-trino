@@ -1,6 +1,6 @@
 ARG PROMETHEUS_VERSION=0.16.1
 ARG TRINO_VERSION=375
-ARG UBI_VERSION=8.5
+ARG UBI_VERSION=8.6
 
 FROM registry.access.redhat.com/ubi8/ubi:${UBI_VERSION} as downloader
 
