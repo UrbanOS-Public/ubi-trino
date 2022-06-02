@@ -34,7 +34,14 @@ if [ -n "$changed" ]; then
     # podman is used on the RHEL8 nodes
     podman login -u="$QUAY_USER" -p="$QUAY_TOKEN" quay.io
     # podman login -u="$RH_REGISTRY_USER" -p="$RH_REGISTRY_TOKEN" registry.redhat.io
-    podman build -t "${IMAGE}:${IMAGE_TAG}" ${SCRIPT_DIR}
+    # podman build -t "${IMAGE}:${IMAGE_TAG}" ${SCRIPT_DIR}
+    podman build --arch=amd64 -t "${IMAGE}:${IMAGE_TAG}.amd64" -f ${SCRIPT_DIR}
+    podman build --arch=arm64 -t "${IMAGE}:${IMAGE_TAG}.arm64" -f ${SCRIPT_DIR}
+
+    podman manifest create "${IMAGE}:${IMAGE_TAG}"
+    podman manifest add "${IMAGE}:${IMAGE_TAG}" "${IMAGE}:${IMAGE_TAG}.amd64"
+    podman manifest add "${IMAGE}:${IMAGE_TAG}" "${IMAGE}:${IMAGE_TAG}.arm64"
+
     podman push "${IMAGE}:${IMAGE_TAG}"
     podman tag "${IMAGE}:${IMAGE_TAG}" "${IMAGE}:latest"
     podman push "${IMAGE}:latest"
