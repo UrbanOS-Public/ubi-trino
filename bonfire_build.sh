@@ -36,15 +36,40 @@ function build {
 
 function podman_build {
     set -x
-    podman build -f $APP_ROOT/$DOCKERFILE -t "${IMAGE}:${IMAGE_TAG}" $APP_ROOT
+    # podman build -f $APP_ROOT/$DOCKERFILE -t "${IMAGE}:${IMAGE_TAG}" $APP_ROOT
 
-    podman build --arch=amd64 -t "${IMAGE}:${IMAGE_TAG}.amd64" -f $APP_ROOT/$DOCKERFILE $APP_ROOT
-    podman build --arch=arm64 -t "${IMAGE}:${IMAGE_TAG}.arm64" -f $APP_ROOT/$DOCKERFILE $APP_ROOT
+    # podman build --arch=amd64 -t "${IMAGE}:${IMAGE_TAG}.amd64" -f $APP_ROOT/$DOCKERFILE $APP_ROOT
+    # podman build --arch=arm64 -t "${IMAGE}:${IMAGE_TAG}.arm64" -f $APP_ROOT/$DOCKERFILE $APP_ROOT
 
-    podman manifest create "${IMAGE}:${IMAGE_TAG}"
-    podman manifest add "${IMAGE}:${IMAGE_TAG}" "${IMAGE}:${IMAGE_TAG}.amd64"
-    podman manifest add "${IMAGE}:${IMAGE_TAG}" "${IMAGE}:${IMAGE_TAG}.arm64"
-    podman push "${IMAGE}:${IMAGE_TAG}"
+    # podman manifest create "${IMAGE}:${IMAGE_TAG}"
+    # podman manifest add "${IMAGE}:${IMAGE_TAG}" "${IMAGE}:${IMAGE_TAG}.amd64"
+    # podman manifest add "${IMAGE}:${IMAGE_TAG}" "${IMAGE}:${IMAGE_TAG}.arm64"
+    # podman push "${IMAGE}:${IMAGE_TAG}"
+
+export MANIFEST_NAME="multiarch-test"
+
+# Create a multi-architecture manifest
+buildah manifest create ${MANIFEST_NAME}
+
+# Build your amd64 architecture container
+buildah bud \
+    --tag "${IMAGE}:${IMAGE_TAG}" \
+    --manifest ${MANIFEST_NAME} \
+    --arch amd64 \
+    $APP_ROOT
+
+# Build your arm64 architecture container
+buildah bud \
+    --tag "${IMAGE}:${IMAGE_TAG}" \
+    --manifest ${MANIFEST_NAME} \
+    --arch arm64 \
+    $APP_ROOT
+
+# Push the full manifest, with both CPU Architectures
+buildah manifest push --all \
+    ${MANIFEST_NAME} \
+    "${IMAGE}:${IMAGE_TAG}"
+
     set +x
 }
 
