@@ -11,10 +11,9 @@ ARG CLIENT_LOCATION="https://repo1.maven.org/maven2/io/trino/trino-cli/${TRINO_V
 ARG PROMETHEUS_JMX_EXPORTER_LOCATION="https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/${PROMETHEUS_VERSION}/jmx_prometheus_javaagent-${PROMETHEUS_VERSION}.jar"
 ARG WORK_DIR="/tmp"
 
-RUN \
-curl -o ${WORK_DIR}/trino-server-${TRINO_VERSION}.tar.gz ${SERVER_LOCATION} && \
-tar -C ${WORK_DIR} -xzf ${WORK_DIR}/trino-server-${TRINO_VERSION}.tar.gz && \
-rm ${WORK_DIR}/trino-server-${TRINO_VERSION}.tar.gz
+RUN curl -o ${WORK_DIR}/trino-server-${TRINO_VERSION}.tar.gz ${SERVER_LOCATION}
+RUN tar -C ${WORK_DIR} -xzf ${WORK_DIR}/trino-server-${TRINO_VERSION}.tar.gz
+RUN rm ${WORK_DIR}/trino-server-${TRINO_VERSION}.tar.gz
 RUN \
 curl -o ${WORK_DIR}/trino-cli-${TRINO_VERSION}-executable.jar ${CLIENT_LOCATION} && \
 chmod +x ${WORK_DIR}/trino-cli-${TRINO_VERSION}-executable.jar
