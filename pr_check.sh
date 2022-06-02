@@ -34,7 +34,7 @@ curl -s $CICD_URL/bootstrap.sh > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
 git diff --name-only origin/main > $CHANGED_DIR/files_changed.txt
 if check_for_file_changes 'default|bin|Dockerfile|image_build_num.txt'
 then
-    source $CICD_ROOT/build.sh
+    source ./bonfire_build.sh
 else
     IMAGE_TAG=$(./get_image_tag.sh)
 fi
