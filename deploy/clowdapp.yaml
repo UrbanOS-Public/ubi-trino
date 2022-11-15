@@ -705,4 +705,4 @@ parameters:
 - name: CONFIGMAP_HASH
   description: "The random hash to change the configmap names"
   generate: expression
-  from: "[a-z0-9]{6}}"
+  from: "[a-z0-9]{6}"
