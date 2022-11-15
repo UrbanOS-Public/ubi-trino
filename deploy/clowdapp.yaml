@@ -13,7 +13,7 @@ objects:
 - apiVersion: v1
   kind: ConfigMap
   metadata:
-    name: trino-scripts
+    name: trino-scripts-${CONFIGMAP_HASH}
     labels:
       app: trino
   data:
@@ -147,7 +147,7 @@ objects:
 - apiVersion: v1
   kind: ConfigMap
   metadata:
-    name: trino-config
+    name: trino-config-${CONFIGMAP_HASH}
     labels:
       app: trino
   data:
@@ -206,7 +206,7 @@ objects:
 - apiVersion: v1
   kind: ConfigMap
   metadata:
-    name: trino-config-catalog
+    name: trino-config-catalog-${CONFIGMAP_HASH}
     labels:
       app: trino
   data:
@@ -404,7 +404,7 @@ objects:
         volumes:
           - name: trino-scripts
             configMap:
-              name: trino-scripts
+              name: trino-scripts-${CONFIGMAP_HASH}
               items:
               - key: entrypoint.sh
                 path: entrypoint.sh
@@ -414,10 +414,10 @@ objects:
                 mode: 509
           - name: trino-config
             configMap:
-              name: trino-config
+              name: trino-config-${CONFIGMAP_HASH}
           - name: trino-config-catalog
             configMap:
-              name: trino-config-catalog
+              name: trino-config-catalog-${CONFIGMAP_HASH}
           - name: trino-etc
             emptyDir: {}
           - name: trino-data
@@ -526,7 +526,7 @@ objects:
         volumes:
           - name: trino-scripts
             configMap:
-              name: trino-scripts
+              name: trino-scripts-${CONFIGMAP_HASH}
               items:
               - key: entrypoint.sh
                 path: entrypoint.sh
@@ -536,10 +536,10 @@ objects:
                 mode: 509
           - name: trino-config
             configMap:
-              name: trino-config
+              name: trino-config-${CONFIGMAP_HASH}
           - name: trino-config-catalog
             configMap:
-              name: trino-config-catalog
+              name: trino-config-catalog-${CONFIGMAP_HASH}
           - name: trino-etc
             emptyDir: {}
           - name: trino-data
@@ -700,3 +700,9 @@ parameters:
   displayName: livenessPeriodSeconds
   name: LIVENESS_PROBE_PERIOD
   value: '120'
+
+# Configmap updater
+- name: CONFIGMAP_HASH
+  description: "The random hash to change the configmap names"
+  generate: expression
+  from: "[a-zA-Z0-9]{6}}"
