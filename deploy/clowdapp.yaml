@@ -297,6 +297,7 @@ objects:
       hive.hdfs.authentication.type=NONE
       hive.metastore.authentication.type=NONE
       hive.metastore-timeout=${METASTORE_TIMEOUT}
+      hive.metastore.client.socket.timeout=${METASTORE_SOCKET_TIMEOUT}
       hive.metastore.uri=thrift://hive-metastore:10000
       hive.parquet.use-column-names=true
       hive.s3.path-style-access=true
@@ -682,6 +683,10 @@ parameters:
   displayName: hive.metastore-timeout
   name: METASTORE_TIMEOUT
   value: '300s'
+- description: Timeout for Hive metastore connection
+  displayName: hive.metastore-connection-timeout
+  name: METASTORE_SOCKET_TIMEOUT
+  value: '900s'
 - description: Whether to use SSE encryption
   displayName: hive.s3.sse.enabled
   name: S3_SSE_ENABLED
