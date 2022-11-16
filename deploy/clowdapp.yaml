@@ -709,4 +709,4 @@ parameters:
 # Configmap updater
 - name: CONFIGMAP_HASH
   description: "The random hash to change the configmap names"
-  value: '000001'
+  value: '000002'
