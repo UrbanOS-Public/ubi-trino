@@ -3,13 +3,13 @@
 [[ "$1" == "quiet" ]] && QUIET=1 || QUIET=0
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-LOCAL_PRESTO_VER=$(${SCRIPT_DIR}/get_trino_version.sh)
-UPSTREAM_PRESTO_VER=$(${SCRIPT_DIR}/get_latest_repo_release_tag.sh)
+LOCAL_TRINO_VER="$(grep -E '^ARG TRINO_VERSION=' ${SCRIPT_DIR}/Dockerfile | cut -d '=' -f 2)"
+UPSTREAM_TRINO_VER=$(${SCRIPT_DIR}/get_latest_repo_release_tag.sh)
 
 RC=0
-if [[ ${LOCAL_PRESTO_VER} -lt ${UPSTREAM_PRESTO_VER} ]]
+if [[ ${LOCAL_TRINO_VER} -lt ${UPSTREAM_TRINO_VER} ]]
 then
-    [[ ${QUIET} -eq 0 ]] && echo "A newer version of trino has been released (${UPSTREAM_PRESTO_VER})"
+    [[ ${QUIET} -eq 0 ]] && echo "A newer version of trino has been released (${UPSTREAM_TRINO_VER})"
     RC=1
 else
     [[ ${QUIET} -eq 0 ]] && echo "Up to date with trinodb/trino"
