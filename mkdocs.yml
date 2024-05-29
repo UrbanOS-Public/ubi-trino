@@ -1,0 +1,4 @@
+docs_dir: docs/
+site_name: UBI Trino Documentation
+plugins:
+  - techdocs-core

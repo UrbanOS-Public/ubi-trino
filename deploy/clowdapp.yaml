@@ -220,6 +220,15 @@ objects:
             "allow": "all"
           }
         ],
+        "procedures": [
+          {
+            "user": "admin",
+            "privileges": [
+              "EXECUTE",
+              "GRANT_EXECUTE"
+            ]
+          }
+        ],
         "system_session_properties": [
           {
             "user": "admin",
