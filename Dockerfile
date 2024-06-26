@@ -1,7 +1,7 @@
 ARG PROMETHEUS_VERSION=0.20.0
-ARG TRINO_VERSION=448
+ARG TRINO_VERSION=450
 
-FROM registry.access.redhat.com/ubi8/ubi:8.10-901.1716482497 as downloader
+FROM registry.access.redhat.com/ubi8/ubi:latest as downloader
 
 ARG PROMETHEUS_VERSION
 ARG TRINO_VERSION
@@ -27,7 +27,7 @@ COPY default ${WORK_DIR}/
 ARG to_delete="/TO_DELETE"
 RUN mkdir ${to_delete} && \
     mv ${WORK_DIR}/trino-server-${TRINO_VERSION}/plugin/* ${to_delete} && \
-    mv ${to_delete}/{hive,blackhole,jmx,memory,postgresql,tpcds,tpch} ${WORK_DIR}/trino-server-${TRINO_VERSION}/plugin/. && \
+    mv ${to_delete}/{hive,iceberg,blackhole,jmx,memory,postgresql,tpcds,tpch} ${WORK_DIR}/trino-server-${TRINO_VERSION}/plugin/. && \
     rm -rf ${to_delete}
 ###########################
 
