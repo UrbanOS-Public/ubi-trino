@@ -1,7 +1,7 @@
 ARG PROMETHEUS_VERSION=0.20.0
-ARG TRINO_VERSION=443
+ARG TRINO_VERSION=453
 
-FROM registry.access.redhat.com/ubi8/ubi:latest as downloader
+FROM registry.access.redhat.com/ubi9/ubi:latest as downloader
 
 ARG PROMETHEUS_VERSION
 ARG TRINO_VERSION
@@ -22,17 +22,13 @@ COPY bin ${WORK_DIR}/trino-server-${TRINO_VERSION}
 COPY default ${WORK_DIR}/
 
 ###########################
-# Remove all unused plugins
-# Only hive, blackhole, jmx, memory, postgresql, tpcds, and tpch are configured plugins.
-ARG to_delete="/TO_DELETE"
-RUN mkdir ${to_delete} && \
-    mv ${WORK_DIR}/trino-server-${TRINO_VERSION}/plugin/* ${to_delete} && \
-    mv ${to_delete}/{hive,blackhole,jmx,memory,postgresql,tpcds,tpch} ${WORK_DIR}/trino-server-${TRINO_VERSION}/plugin/. && \
-    rm -rf ${to_delete}
+# Remove unwanted plugins
+RUN rm -rf ${WORK_DIR}/trino-server-${TRINO_VERSION}/plugin/{phoenix5,redshift,pinot}
+
 ###########################
 
 # Final container image:
-FROM registry.access.redhat.com/ubi8/ubi:latest
+FROM registry.access.redhat.com/ubi9/ubi:latest
 
 LABEL io.k8s.display-name="OpenShift Trino" \
       io.k8s.description="This is an image used by Cost Management to install and run Trino." \
@@ -42,13 +38,23 @@ LABEL io.k8s.display-name="OpenShift Trino" \
 
 RUN yum -y update && yum clean all
 
+#ENV DISTRIBUTION_NAME=rhel
+
+RUN touch /etc/yum.repos.d/adoptium.repo
+
+RUN \
+   echo '[Adoptium]' >> /etc/yum.repos.d/adoptium.repo; \
+   echo 'name=Adoptium' >> /etc/yum.repos.d/adoptium.repo; \
+   echo "baseurl=https://packages.adoptium.net/artifactory/rpm/${DISTRIBUTION_NAME:-$(. /etc/os-release; echo $ID)}/\$releasever/\$basearch" >> /etc/yum.repos.d/adoptium.repo; \
+   echo 'enabled=1' >> /etc/yum.repos.d/adoptium.repo; \
+   echo 'gpgcheck=1' >> /etc/yum.repos.d/adoptium.repo; \
+   echo 'gpgkey=https://packages.adoptium.net/artifactory/api/gpg/key/public' >> /etc/yum.repos.d/adoptium.repo
+
 RUN \
     # symlink the python3 installed in the container
     ln -s /usr/libexec/platform-python /usr/bin/python && \
-    # add the Azul RPM repository -> needs to match whatever trino requires
-    yum install -y https://cdn.azul.com/zulu/bin/zulu-repo-1.0.0-1.noarch.rpm && \
     set -xeu && \
-    INSTALL_PKGS="zulu21-jre less jq" && \
+    INSTALL_PKGS="temurin-22-jdk less jq" && \
     yum install -y $INSTALL_PKGS --setopt=tsflags=nodocs --setopt=install_weak_deps=False && \
     yum clean all && \
     rm -rf /var/cache/yum
@@ -60,7 +66,7 @@ RUN \
     mkdir -p /usr/lib/trino /data/trino/{data,logs,spill} && \
     chown -R "trino:trino" /usr/lib/trino /data/trino
 
-ENV JAVA_HOME=/usr/lib/jvm/zulu21 \
+ENV JAVA_HOME=/usr/lib/jvm/temurin-22-jdk \
     TRINO_HOME=/etc/trino \
     TRINO_HISTORY_FILE=/data/trino/.trino_history
 
@@ -85,7 +91,7 @@ COPY --from=downloader /tmp/trino-cli-${TRINO_VERSION}-executable.jar /usr/bin/t
 COPY --from=downloader --chown=trino:trino /tmp/trino-server-${TRINO_VERSION} /usr/lib/trino
 COPY --chown=trino:trino default/etc $TRINO_HOME
 
-EXPOSE 10000
+EXPOSE 8080
 USER trino:trino
 ENV LANG en_US.UTF-8
 CMD ["/usr/lib/trino/run-trino"]
