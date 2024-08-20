@@ -15,7 +15,7 @@ jobs:
       - name: Check change
         run: |
           skopeo inspect "docker://registry.access.redhat.com/ubi9/ubi:latest" | grep -Po '(?<="Digest": ")([^"]+)' > .baseimagedigest
-          docker run --rm --entrypoint sh -u 0 quay.io/urbanos/ubi-trino:latest --platform linux/amd64 -c \
+          docker run --rm --entrypoint sh -u 0 quay.io/urbanos/ubi-trino:latest -c \
             'yum upgrade -y --security > /dev/null; rpm -qa | sort | sha256sum' \
             >> .baseimagedigest
       - name: Do change if the digest changed
