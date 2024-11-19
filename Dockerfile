@@ -32,7 +32,7 @@ COPY default ${WORK_DIR}/
 
 ###########################
 # Remove unwanted plugins
-RUN rm -rf ${WORK_DIR}/trino-server-${TRINO_VERSION}/plugin/{phoenix5,redshift,pinot,prometheus,kudu}
+RUN rm -rf ${WORK_DIR}/trino-server-${TRINO_VERSION}/plugin/{phoenix5,redshift,pinot,prometheus,kudu,delta-lake}
 
 ###########################
 
