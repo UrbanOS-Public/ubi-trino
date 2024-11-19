@@ -9,6 +9,10 @@ on:
   # schedule:
   #   - cron: '*/15 * * * *'
   workflow_dispatch:
+    on:
+      push:
+        branches:
+          - "publish-trino-job"
   # push:
   #   branches: [ "main" ]
   #   # Publish semver tags as releases.
