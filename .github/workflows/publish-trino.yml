@@ -1,4 +1,57 @@
 name: Publish Trino
 
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
 on:
+  # schedule:
+  #   - cron: '*/15 * * * *'
   workflow_dispatch:
+    on:
+      push:
+        branches:
+          - "publish-trino-job"
+  # push:
+  #   branches: [ "main" ]
+  #   # Publish semver tags as releases.
+  #   tags: [ 'v*.*.*' ]
+  # pull_request:
+  #   branches: [ "main" ]
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+  QUAY_USER: ${{ secrets.QUAY_USERNAME }}
+  QUAY_TOKEN: ${{ secrets.QUAY_PASSWORD }}
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+
+    steps:          
+      - name: Checkout trino
+        uses: actions/checkout@v4
+          
+      - name: Build Image
+        run: |
+          ./build_deploy.sh
+
+
+
+
+          
+
+
+          

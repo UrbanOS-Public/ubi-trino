@@ -165,13 +165,13 @@ objects:
       -XX:ReservedCodeCacheSize=512M
       -XX:PerMethodRecompilationCutoff=10000
       -XX:PerBytecodeRecompilationCutoff=10000
-      -XshowSettings:VM
+      -XshowSettings:vm
       -Dfile.encoding=UTF-8
       -Djdk.attach.allowAttachSelf=true
       -Djdk.nio.maxCachedBufferSize=2000000
       -verbose:gc
       -Xlog:gc*:/data/trino/logs/gc.log
-      -javaagent:/usr/lib/trino/jmx_exporter.jar=9000:/etc/trino/catalog/config.yaml
+#      -javaagent:/usr/lib/trino/jmx_exporter.jar=9000:/etc/trino/catalog/config.yaml
       # Reduce starvation of threads by GClocker, recommend to set about the number of cpu cores (JDK-8192647)
       -XX:+UnlockDiagnosticVMOptions
       -XX:GCLockerRetryAllocationCount=8
@@ -187,8 +187,8 @@ objects:
       spill-enabled=true
       spiller-spill-path=/data/trino/spill
       node-scheduler.include-coordinator=false
-      http-server.http.port=10000
-      discovery.uri=http://trino-coordinator:10000
+      http-server.http.port=8000
+      discovery.uri=http://trino-coordinator:8000
       query.max-memory-per-node=${QUERY_MAX_MEMORY_PER_NODE}
       query.max-memory=${QUERY_MAX_MEMORY}
       query.max-total-memory=${QUERY_MAX_TOTAL_MEMORY}
@@ -200,8 +200,8 @@ objects:
       spill-enabled=true
       spiller-spill-path=/data/trino/spill
       node-scheduler.include-coordinator=false
-      http-server.http.port=10000
-      discovery.uri=http://trino-coordinator:10000
+      http-server.http.port=8000
+      discovery.uri=http://trino-coordinator:8000
       query.max-memory-per-node=${QUERY_MAX_MEMORY_PER_NODE}
       query.max-memory=${QUERY_MAX_MEMORY}
       query.max-total-memory=${QUERY_MAX_TOTAL_MEMORY}
@@ -357,7 +357,7 @@ objects:
       hive.metastore.thrift.client.read-timeout=${METASTORE_READ_TIMEOUT}
       hive.max-partitions-per-scan=${HIVE_PARTITION_LIMIT}
       hive.partition-statistics-sample-size=${HIVE_PARTITION_STATS_SAMPLE_SIZE}
-      hive.metastore.uri=thrift://hive-metastore:10000
+      hive.metastore.uri=thrift://hive-metastore:8000
       hive.parquet.use-column-names=true
       hive.s3.path-style-access=true
       hive.s3.sse.enabled=${S3_SSE_ENABLED}
@@ -384,7 +384,7 @@ objects:
       minReplicas: ${{COORDINATOR_REPLICAS}}
       webServices:
         public:
-          enabled: false
+          enabled: true
         private:
           enabled: true
         metrics:
@@ -507,7 +507,7 @@ objects:
       minReplicas: ${{WORKER_REPLICAS}}
       webServices:
         public:
-          enabled: false
+          enabled: true
         private:
           enabled: true
         metrics:
