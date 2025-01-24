@@ -1,5 +1,6 @@
 #ARG PROMETHEUS_VERSION=0.20.0
-ARG TRINO_VERSION=468 # 458
+#ARG TRINO_VERSION=458
+ARG TRINO_VERSION=468
 
 FROM ghcr.io/airlift/jvmkill:latest AS jvmkill
 FROM registry.access.redhat.com/ubi9/ubi-minimal:latest as downloader
