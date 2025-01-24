@@ -1,5 +1,5 @@
 #ARG PROMETHEUS_VERSION=0.20.0
-ARG TRINO_VERSION=458
+ARG TRINO_VERSION=468 # 458
 
 FROM ghcr.io/airlift/jvmkill:latest AS jvmkill
 FROM registry.access.redhat.com/ubi9/ubi-minimal:latest as downloader
@@ -61,7 +61,7 @@ RUN \
     set -xeu && \
     microdnf update -y && \
     update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
-    INSTALL_PKGS="temurin-22-jdk less jq tar python3 shadow-utils" && \
+    INSTALL_PKGS="temurin-23-jdk less jq tar python3 shadow-utils" && \
     microdnf install -y $INSTALL_PKGS --setopt=tsflags=nodocs --setopt=install_weak_deps=0
 
 # add user and directories
@@ -71,7 +71,7 @@ RUN \
     mkdir -p /usr/lib/trino /data/trino/{data,logs,spill} && \
     chown -R "trino:trino" /usr/lib/trino /data/trino
 
-ENV JAVA_HOME=/usr/lib/jvm/temurin-22-jdk \
+ENV JAVA_HOME=/usr/lib/jvm/temurin-23-jdk \
     TRINO_HOME=/etc/trino \
     TRINO_HISTORY_FILE=/data/trino/.trino_history
 
