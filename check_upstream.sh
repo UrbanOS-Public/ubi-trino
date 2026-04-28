@@ -1,4 +1,4 @@
-#! /usr/bin/env sh
+#!/usr/bin/env bash
 
 [[ "$1" == "quiet" ]] && QUIET=1 || QUIET=0
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"

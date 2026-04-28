@@ -1,0 +1,45 @@
+graph TD
+    %% https://mermaid.live to view / edit
+    A["ubi-trino<br/>(Repository)"]
+
+    A1["CI Workflow:<br/>publish-trino.yml"]
+    A2["CI Workflow:<br/>check-image.yml<br/>(daily cron)"]
+
+    B1["External:<br/>Maven Central<br/>trino-server-{ver}.tar.gz<br/>trino-cli-{ver}.jar"]
+    B2["External:<br/>registry.access.redhat.com<br/>ubi9/ubi-minimal:latest"]
+    B3["External:<br/>ghcr.io/airlift/jvmkill:latest"]
+
+    C1["build_deploy.sh"]
+    C2["Docker Build"]
+    C3["Container Image:<br/>quay.io/urbanos/ubi-trino"]
+
+    D["Quay.io Registry"]
+
+    E["PR: bump image tag<br/>(bump-image-tag.sh)"]
+
+    A --> A1
+    A --> A2
+
+    A1 -->|triggers| C1
+    C1 -->|runs| C2
+
+    B1 -->|downloaded during| C2
+    B2 -->|base image for| C2
+    B3 -->|build stage for| C2
+
+    C2 -->|creates| C3
+    C3 -->|pushed to| D
+
+    A2 -->|checks digest of| B2
+    A2 -->|if digest changed| E
+    E -->|updates| A
+
+    style A fill:#fff3e0,color:#000
+    style A1 fill:#e1f5ff,color:#000
+    style A2 fill:#e1f5ff,color:#000
+    style B1 fill:#c8e6c9,color:#000
+    style B2 fill:#c8e6c9,color:#000
+    style B3 fill:#c8e6c9,color:#000
+    style C3 fill:#f8bbd0,color:#000
+    style D fill:#ede7f6,color:#000
+    style E fill:#fff9c4,color:#000
