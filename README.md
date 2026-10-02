@@ -18,7 +18,7 @@ Docker Image build from RHEL UBI base image
 1. Checkout `main` and pull
 2. Execute `check_upstream.sh` If it reports _Up to date with trinodb/trino_ then stop.
 3. If it reports a new trino version number, then branch from `main` for that new version.
-4. Update `Dockerfile` : `ARG PRESTO_VERSION` setting it to the version reported.
+4. Update `Dockerfile` : `ARG TRINO_VERSION` setting it to the version reported.
 5. Execute `get_trino_version.sh` to make sure that the output matches the new trino version.
 6. Increment the value in `image_build_num.txt` with `bump-image-tag.sh`.
 7. Run a test build by executing `pr_check.sh`
